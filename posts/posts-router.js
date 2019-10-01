@@ -8,7 +8,14 @@ const router = express.Router();
 // POST /api/posts  ----  insert(post)
 // Creates a post using the information sent inside the request body.
 router.post('/', (req, res) => {
-    Posts.insert(req.body)
+    const post = req.body;
+
+    if (!post.title || !post.contents) {
+        res.status(400).json({
+            errorMessage: "Please provide title and contents for the post."
+        })
+    } else {    
+        Posts.insert(post)
         .then(post => {
             res.status(201).json(post);
         })
@@ -18,12 +25,15 @@ router.post('/', (req, res) => {
                 message: 'Error adding the post',
             });
         });
+    }
 });
 
 // POST /api/posts/:id/comments  ----  insertComment(comment)
 // Creates a comment for the post with the specified id using
 // information sent inside of the request body.
-
+router.post('/:id/comments', (req, res) => {
+    Posts.insertComment(req.body)
+})
 
 // GET /api/posts  ----  find()
 // Returns an array of all the post objects contained in the database.
