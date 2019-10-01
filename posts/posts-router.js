@@ -121,7 +121,8 @@ router.get('/:id/comments', (req, res) => {
 // make additional calls to the database in order to satisfy this requirement.
 router.delete('/:id', (req, res) => {
     const id = req.params.id;
-    Posts.remove(id)
+    Posts
+        .remove(id)
         .then(post => {
             if (post) {
                 res.status(200).json(post)
@@ -142,5 +143,31 @@ router.delete('/:id', (req, res) => {
 // PUT /api/posts/:id  ----  update(id, changes)
 // Updates the post with the specified id using data from the request body. 
 // Returns the modified document, NOT the original.
+router.put('/:id', (req, res) => {
+    const id = req.params.id;
+    const changes = req.body;
+
+    if (!id) {
+        res.status(404).json({
+            message: "The post with the specified ID does not exist."
+        })
+    } else if (!changes.title || !changes.contents) {
+        res.status(400).json({
+            errorMessage: "Please provide title and contents for the post."
+        })
+    } else {
+        Posts
+            .update(id, changes)
+            .then(post => {
+                res.status(200).json(post)
+            })
+            .catch(error => {
+                console.log(error)
+                res.status(500).json({
+                    error: "The post information could not be modified."
+                })
+            })
+    }
+})
 
 module.exports = router;
