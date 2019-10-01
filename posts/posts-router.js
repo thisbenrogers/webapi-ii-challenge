@@ -7,9 +7,20 @@ const router = express.Router();
 
 // POST /api/posts  ----  insert(post)
 // Creates a post using the information sent inside the request body.
+router.post('/', (req, res) => {
+    Posts.insert(req.body)
+        .then(post => {
+            res.status(201).json(post);
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({
+                message: 'Error adding the post',
+            });
+        });
+});
 
-
-// POST /api/posts/:id/comments  ----  findPostComments(postId)
+// POST /api/posts/:id/comments  ----  insertComment(comment)
 // Creates a comment for the post with the specified id using
 // information sent inside of the request body.
 
