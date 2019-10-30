@@ -34,9 +34,6 @@ if (!id) {
   res.status(400).json({ errorMessage: "Please provide text for the comments." })
  }
  Posts.insertComment(body)
-  //  .then(comment => {
-  //    res.status(201).json(comment)
-  //  })
     .then(post => {
       Posts.findCommentById(post.id)
         .then(comment => {
